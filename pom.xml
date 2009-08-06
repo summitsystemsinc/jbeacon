@@ -4,11 +4,11 @@
     <groupId>com.summit</groupId>
     <artifactId>jbeacon</artifactId>
     <packaging>pom</packaging>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
     <name>jBeacon Master POM</name>
     <url>http://jbeacon.sourceforge.net/</url>
 	<scm>
-		<connection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/tags/jbeacon-0.1-post</connection>
+		<connection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/trunk</connection>
 	</scm>
     <build>
         <plugins>
