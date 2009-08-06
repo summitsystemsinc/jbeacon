@@ -6,7 +6,7 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
     <bean id="beacon" class="com.summit.jbeacon.beacons.MultiCastResourceBeacon"
     init-method="startListening" destroy-method="stopListening">
-        <property name="hostName" value="127.0.0.1" />
+        <property name="hostName" value="10.0.1.51" />
         <property name="listenPort" value="6233" />
         <property name="broadcastText" value="jbeacon_test" />
     </bean>
