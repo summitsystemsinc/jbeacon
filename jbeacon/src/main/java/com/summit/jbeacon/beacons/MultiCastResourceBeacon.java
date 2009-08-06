@@ -385,7 +385,7 @@ public class MultiCastResourceBeacon {
                     if(availableResources.contains(packet)){
                         availableResources.remove(packet);
                     }
-                    log.debug("Received resources from: "
+                    log.info("Received resources from: "
                             + packet.getDefaultHostName());
                     availableResources.add(packet);
                     outWriter.println(ACK_COMMAND);

@@ -8,8 +8,7 @@ Without this configuration present, some functionality in the IDE may be limited
 -->
     <spring-data xmlns="http://www.netbeans.org/ns/spring-data/1">
         <config-files>
-            <config-file>src/test/resources/testApplicationContext.xml</config-file>
-            <config-file>src/main/java/com/summit/jbeacon/demo/jBeaconDemoServerContext.xml</config-file>
+            <config-file>src/test/java/org/summit/jbeacon/demo/server/demoServerContext.xml</config-file>
         </config-files>
         <config-file-groups/>
     </spring-data>
