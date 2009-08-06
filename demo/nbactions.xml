@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-codeCoverage</actionName>
+            <displayName>codeCoverage</displayName>
+            <goals>
+                <goal>cobertura:cobertura</goal>
+            </goals>
+        </action>
+    </actions>
