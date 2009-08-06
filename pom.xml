@@ -8,6 +8,9 @@
     <version>1.0-SNAPSHOT</version>
     <name>jBeacon Master POM</name>
     <url>http://jbeacon.sourceforge.net/</url>
+	<scm>
+		<connection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/trunk</connection>
+	</scm>
     <build>
         <plugins>
             <plugin>
