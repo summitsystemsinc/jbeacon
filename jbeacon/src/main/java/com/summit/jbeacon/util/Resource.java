@@ -62,6 +62,7 @@ public class Resource implements Serializable {
     public final void setResourceMetaData(
             final Map<String, String> metaData) {
         Set<Map.Entry<String,String>> entries = metaData.entrySet();
+        this.resourceMetaData.clear();
         for(Map.Entry<String,String> entry : entries){
             this.resourceMetaData.put(entry.getKey(), entry.getValue());
         }
