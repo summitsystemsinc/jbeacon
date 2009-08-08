@@ -245,6 +245,20 @@ public class MultiCastResourceBeacon {
         this.hostName = hostName;
     }
 
+    /**
+     * @return the availableResources
+     */
+    public Set<ResourcePacket> getAvailableResources() {
+        return availableResources;
+    }
+
+    /**
+     * @param availableResources the availableResources to set
+     */
+    public void setAvailableResources(Set<ResourcePacket> availableResources) {
+        this.availableResources = availableResources;
+    }
+
     private class MultiCastResourceListener implements Runnable {
 
         private ServerSocket listeningSocket;
@@ -382,12 +396,12 @@ public class MultiCastResourceBeacon {
                     //TODO Recieve objects...
                     ResourcePacket packet = (ResourcePacket) objectReader.
                             readObject();
-                    if(availableResources.contains(packet)){
-                        availableResources.remove(packet);
+                    if(getAvailableResources().contains(packet)){
+                        getAvailableResources().remove(packet);
                     }
                     log.info("Received resources from: "
                             + packet.getDefaultHostName());
-                    availableResources.add(packet);
+                    getAvailableResources().add(packet);
                     outWriter.println(ACK_COMMAND);
                     outWriter.flush();
                 } catch (ClassNotFoundException ex) {
