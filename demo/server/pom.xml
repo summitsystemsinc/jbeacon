@@ -9,7 +9,7 @@
     <groupId>com.summit.jbeacon.demo</groupId>
     <artifactId>server</artifactId>
     <version>0.2-SNAPSHOT</version>
-    <name>server</name>
+    <name>jBeacon - demo server</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>

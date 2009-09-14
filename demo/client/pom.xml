@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.summit.jbeacon.demo</groupId>
   <artifactId>client</artifactId>
-  <name>client</name>
+  <name>jBeacon - demo client</name>
   <url>http://maven.apache.org</url>
   <dependencies>
         <dependency>
