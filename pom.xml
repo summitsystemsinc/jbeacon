@@ -4,54 +4,61 @@
     <groupId>com.summit</groupId>
     <artifactId>jbeacon</artifactId>
     <packaging>pom</packaging>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <name>jBeacon Master POM</name>
     <url>http://jbeacon.sourceforge.net/</url>
-	<scm>
-		<connection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/trunk</connection>
-	</scm>
+    <scm>
+	<connection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/tags/jbeacon-0.2</connection>
+	<developerConnection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/tags/jbeacon-0.2</developerConnection>
+    </scm>
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-        </plugins>
+	<plugins>
+	    <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-compiler-plugin</artifactId>
+		<configuration>
+		    <source>1.6</source>
+		    <target>1.6</target>
+		</configuration>
+	    </plugin>
+		<plugin>
+			<artifactId>maven-release-plugin</artifactId>
+			<configuration>
+				<tagBase>https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/tags</tagBase>
+			</configuration>
+		</plugin>
+	</plugins>
     </build>
     <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.6</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>1.1.1</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>1.2.9</version>
-                <optional />
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring</artifactId>
-                <version>2.5.6.SEC01</version>
-            </dependency>
-        </dependencies>
+	<dependencies>
+	    <dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.6</version>
+		<scope>test</scope>
+	    </dependency>
+	    <dependency>
+		<groupId>commons-logging</groupId>
+		<artifactId>commons-logging</artifactId>
+		<version>1.1.1</version>
+		<scope>compile</scope>
+	    </dependency>
+	    <dependency>
+		<groupId>log4j</groupId>
+		<artifactId>log4j</artifactId>
+		<version>1.2.9</version>
+		<optional />
+	    </dependency>
+	    <dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring</artifactId>
+		<version>2.5.6.SEC01</version>
+	    </dependency>
+	</dependencies>
     </dependencyManagement>
     <modules>
-        <module>jbeacon</module>
-        <module>demo</module>
+	<module>jbeacon</module>
+	<module>demo</module>
     </modules>
 </project>
 
