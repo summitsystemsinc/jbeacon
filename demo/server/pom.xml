@@ -4,11 +4,11 @@
     <parent>
         <artifactId>demo</artifactId>
         <groupId>com.summit.jbeacon</groupId>
-        <version>0.2-SNAPSHOT</version>
+        <version>0.2</version>
     </parent>
     <groupId>com.summit.jbeacon.demo</groupId>
     <artifactId>server</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <name>jBeacon - demo server</name>
     <url>http://maven.apache.org</url>
     <dependencies>
