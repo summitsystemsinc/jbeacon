@@ -4,7 +4,7 @@
     <groupId>com.summit</groupId>
     <artifactId>jbeacon</artifactId>
     <packaging>pom</packaging>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.2.1-SNAPSHOT</version>
     <name>jBeacon Master POM</name>
     <url>http://jbeacon.sourceforge.net/</url>
     <scm>
@@ -19,12 +19,14 @@
 		<configuration>
 		    <source>1.6</source>
 		    <target>1.6</target>
+			<encoding>UTF-8</encoding>
 		</configuration>
 	    </plugin>
 		<plugin>
 			<artifactId>maven-release-plugin</artifactId>
 			<configuration>
 				<tagBase>https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/tags</tagBase>
+				<encoding>UTF-8</encoding>
 			</configuration>
 		</plugin>
 	</plugins>
