@@ -38,7 +38,7 @@
     class="com.summit.jbeacon.buoys.MultiCastResourceBuoy">
         <property name="dataGramSize" value="256" />
         <property name="listenString" value="test"/>
-        <property name="listenPort" value="1901"/>
+        <property name="groupPort" value="1901"/>
         <property name="availableResources" ref="resources"/>
     </bean>
     <util:map id="multiCastBeacons">

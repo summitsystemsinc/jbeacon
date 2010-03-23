@@ -71,7 +71,7 @@ public class MultiCastResourceBuoy {
      * default <b>250</b> ms
      */
     private Long threadSleep = Long.valueOf(
-            MultiCastConstants.DEFAULT_THREAD_WAIT);
+	    MultiCastConstants.DEFAULT_THREAD_WAIT);
     //TODO link this commentto DEFAULT_DATAGRAM_SIZE.
     /**
      * 
@@ -87,7 +87,7 @@ public class MultiCastResourceBuoy {
     /**
      * Listen port for the group.
      */
-    private Integer listenPort = MultiCastConstants.DEFAULT_PORT;
+    private Integer groupPort = MultiCastConstants.DEFAULT_PORT;
     //TODO link to startTHread
     /**
      * This is the beacon thread, started with startReceiver().
@@ -100,56 +100,55 @@ public class MultiCastResourceBuoy {
     private Integer readTimeout = MultiCastConstants.DEFAULT_READ_TIMEOUT;
     private String hostName = null;
 
-
     /**
      * Default constructor, gets the logger...
      */
     public MultiCastResourceBuoy() {
-        availableResources = new ArrayList<Resource>();
-        log = LogFactory.getLog(MultiCastResourceBuoy.class);
+	availableResources = new ArrayList<Resource>();
+	log = LogFactory.getLog(MultiCastResourceBuoy.class);
     }
 
     /**
      * @return the availableResources
      */
     public final List<Resource> getAvailableResources() {
-        return availableResources;
+	return availableResources;
     }
 
     /**
      * @param resources the availableResources to set
      */
     public final void setAvailableResources(
-            final List<Resource> resources) {
-        this.availableResources = resources;
+	    final List<Resource> resources) {
+	this.availableResources = resources;
     }
 
     /**
      * @return the dataGramSize
      */
     public final Integer getDataGramSize() {
-        return dataGramSize;
+	return dataGramSize;
     }
 
     /**
      * @param size the size to set
      */
     public final void setDataGramSize(final Integer size) {
-        this.dataGramSize = size;
+	this.dataGramSize = size;
     }
 
     /**
-     * @return the listenPort
+     * @return the groupPort
      */
-    public final Integer getListenPort() {
-        return listenPort;
+    public final Integer getGroupPort() {
+	return groupPort;
     }
 
     /**
-     * @param port the listenPort to set
+     * @param port the groupPort to set
      */
-    public final void setListenPort(final Integer port) {
-        this.listenPort = port;
+    public final void setGroupPort(final Integer port) {
+	this.groupPort = port;
     }
 
     /**
@@ -160,25 +159,31 @@ public class MultiCastResourceBuoy {
      * @throws MultiCastResourceBuoyException if the thread fails to start.
      */
     public final void startReceiver() throws MultiCastResourceBuoyException {
-        if (hostName == null) {
-            log.warn("hostName not set, guessing from interface...");
-        }
+	if (hostName == null) {
+	    try {
+		hostName = InetAddress.getLocalHost().getHostName();
+	    } catch (UnknownHostException ex) {
+		throw new MultiCastResourceBuoyException("Host name not" + " configured, and unable to determine; aborting.");
+	    }
+	}
+	log.info("Hostname set to: " + hostName);
+	//log.info("Multicast Group: " + get)
         beaconThread = new BeaconMultiCastReceiver();
-        new Thread(beaconThread).start();
-        //wait for thread to start running, or error out
-        while (!beaconThread.isThreadRunning() &&
-                !beaconThread.isThreadFailed()) {
-            try {
-                Thread.sleep(getThreadSleep());
-            } catch (InterruptedException ex) {
-                log.warn("Thread sleep interupted " + "while waiting on beacon start.");
-            }
-            if (beaconThread.isThreadFailed()) {
-                throw new MultiCastResourceBuoyException(
-                        beaconThread.getThrownException().getMessage(),
-                        beaconThread.getThrownException());
-            }
-        }
+	new Thread(beaconThread).start();
+	//wait for thread to start running, or error out
+	while (!beaconThread.isThreadRunning()
+		&& !beaconThread.isThreadFailed()) {
+	    try {
+		Thread.sleep(getThreadSleep());
+	    } catch (InterruptedException ex) {
+		log.warn("Thread sleep interupted " + "while waiting on beacon start.");
+	    }
+	    if (beaconThread.isThreadFailed()) {
+		throw new MultiCastResourceBuoyException(
+			beaconThread.getThrownException().getMessage(),
+			beaconThread.getThrownException());
+	    }
+	}
     }
 
     /**
@@ -188,76 +193,76 @@ public class MultiCastResourceBuoy {
      * This should also be the spring-destroy method;
      */
     public final void stopReceiver() throws MultiCastResourceBuoyException {
-        beaconThread.notifyThreadStop();
-        while (beaconThread.isThreadRunning()) {
-            try {
-                Thread.sleep(getThreadSleep());
-            } catch (InterruptedException ex) {
-                log.warn("Unnexpected thread death " + "while waiting for receiver to stop...", ex);
+	beaconThread.notifyThreadStop();
+	while (beaconThread.isThreadRunning()) {
+	    try {
+		Thread.sleep(getThreadSleep());
+	    } catch (InterruptedException ex) {
+		log.warn("Unnexpected thread death " + "while waiting for receiver to stop...", ex);
 
-            }
-        }
-        if (beaconThread.isThreadFailed()) {
-            throw new MultiCastResourceBuoyException(
-                    beaconThread.getThrownException().getMessage(),
-                    beaconThread.getThrownException());
-        }
+	    }
+	}
+	if (beaconThread.isThreadFailed()) {
+	    throw new MultiCastResourceBuoyException(
+		    beaconThread.getThrownException().getMessage(),
+		    beaconThread.getThrownException());
+	}
     }
 
     /**
      * @return the readTimeout
      */
     public Integer getReadTimeout() {
-        return readTimeout;
+	return readTimeout;
     }
 
     /**
      * @param readTimeout the readTimeout to set
      */
     public void setReadTimeout(Integer readTimeout) {
-        this.readTimeout = readTimeout;
+	this.readTimeout = readTimeout;
     }
 
     /**
      * @return the listenString
      */
     public String getListenString() {
-        return listenString;
+	return listenString;
     }
 
     /**
      * @param listenString the listenString to set
      */
     public void setListenString(String listenString) {
-        this.listenString = listenString;
+	this.listenString = listenString;
     }
 
     /**
      * @return the threadSleep
      */
     public Long getThreadSleep() {
-        return threadSleep;
+	return threadSleep;
     }
 
     /**
      * @param threadSleep the threadSleep to set
      */
     public void setThreadSleep(Long threadSleep) {
-        this.threadSleep = threadSleep;
+	this.threadSleep = threadSleep;
     }
 
     /**
      * @return the hostName
      */
     public String getHostName() {
-        return hostName;
+	return hostName;
     }
 
     /**
      * @param hostName the hostName to set
      */
     public void setHostName(String hostName) {
-        this.hostName = hostName;
+	this.hostName = hostName;
     }
     private MulticastSocket s = null;
 
@@ -266,269 +271,272 @@ public class MultiCastResourceBuoy {
      */
     private class BeaconMultiCastReceiver implements Runnable {
 
-        /**
-         * Is the thread running?
-         */
-        private boolean running = false;
-        /**
-         * should the thread be running?
-         */
-        private boolean shouldBeRunning = false;
-        /**
-         * Lets us knwo if the thread failed.
-         */
-        private boolean threadFailed = false;
-        private MultiCastResourceBuoyException thrownException = null;
+	/**
+	 * Is the thread running?
+	 */
+	private boolean running = false;
+	/**
+	 * should the thread be running?
+	 */
+	private boolean shouldBeRunning = false;
+	/**
+	 * Lets us knwo if the thread failed.
+	 */
+	private boolean threadFailed = false;
+	private MultiCastResourceBuoyException thrownException = null;
 
-        @Override
-        public void run() {
-            try {
-                shouldBeRunning = true;
-                try {
-                    s = new MulticastSocket(getListenPort());
-                } catch (IOException ex) {
-                    throw new MultiCastResourceBuoyException(
-                            "IOException was thrown while " + "creating multicast socket. ", ex);
-                }
-                InetAddress group = null;
-                try {
-                    group = InetAddress.getByName(multiCastGroup);
-                } catch (UnknownHostException ex) {
-                    throw new MultiCastResourceBuoyException(
-                            "UnkownHostException when creating InetAddress...",
-                            ex);
-                }
-                try {
-                    s.joinGroup(group);
-                } catch (IOException ex) {
-                    throw new MultiCastResourceBuoyException(
-                            "IOException thrown when joining group.",
-                            ex);
-                }
-                byte[] buffer = new byte[getDataGramSize()];
-                try {
-                    s.setSoTimeout(getReadTimeout());
-                } catch (SocketException ex) {
-                    throw new MultiCastResourceBuoyException(
-                            "Error setting the read timeout.", ex);
-                }
-                running = true;
-                while (shouldBeRunning) {
-                    DatagramPacket pack =
-                            new DatagramPacket(buffer, buffer.length);
-                    try {
-                        s.receive(pack);
-                        String message = new String(pack.getData()).trim();
-                        log.info("Received Message \"" + message + "\"");
+	@Override
+	public void run() {
+	    try {
+		shouldBeRunning = true;
+		try {
+		    log.info("Multicast port: " + getGroupPort());
+		    s = new MulticastSocket(getGroupPort());
+		} catch (IOException ex) {
+		    throw new MultiCastResourceBuoyException(
+			    "IOException was thrown while " + "creating multicast socket. ", ex);
+		}
+		InetAddress group = null;
+		try {
+		    log.info("Multicast group: " + multiCastGroup);
+		    group = InetAddress.getByName(multiCastGroup);
+		    log.debug("Group Details: ADDRESS=" + group.getHostAddress());
+		} catch (UnknownHostException ex) {
+		    throw new MultiCastResourceBuoyException(
+			    "UnkownHostException when creating InetAddress...",
+			    ex);
+		}
+		try {
+		    s.joinGroup(group);
+		} catch (IOException ex) {
+		    throw new MultiCastResourceBuoyException(
+			    "IOException thrown when joining group.",
+			    ex);
+		}
+		byte[] buffer = new byte[getDataGramSize()];
+		try {
+		    s.setSoTimeout(getReadTimeout());
+		} catch (SocketException ex) {
+		    throw new MultiCastResourceBuoyException(
+			    "Error setting the read timeout.", ex);
+		}
+		running = true;
+		while (shouldBeRunning) {
+		    DatagramPacket pack =
+			    new DatagramPacket(buffer, buffer.length);
+		    try {
+			s.receive(pack);
+			String message = new String(pack.getData()).trim();
+			log.info("Received Message \"" + message + "\"");
 
-                        //Break up the String...
-                        String[] parts = message.split(" : ");
-                        //if we hear what we are listening for, do stuff
-                        if (parts[0].equals(getListenString())) {
-                            final String[] ipParts = parts[1].split(":");
-                            log.info("Request to send information to: " + ipParts[0] + ":" + ipParts[1]);
-                            //Small inline thread for communication...
-                            //This is not really testable...
-                            //TODO refactor this to make testable.
-                            //This could be done on the
-                            //server side in the beacon
-                            new Thread(new Runnable() {
+			//Break up the String...
+			String[] parts = message.split(" : ");
+			//if we hear what we are listening for, do stuff
+			if (parts[0].equals(getListenString())) {
+			    final String[] ipParts = parts[1].split(":");
+			    log.info("Request to send information to: " + ipParts[0] + ":" + ipParts[1]);
+			    //Small inline thread for communication...
+			    //This is not really testable...
+			    //TODO refactor this to make testable.
+			    //This could be done on the
+			    //server side in the beacon
+			    new Thread(new Runnable() {
 
-                                @Override
-                                public void run() {
-                                    Socket s = null;
-                                    try {
-                                        s = new Socket(InetAddress.getByName(
-                                                ipParts[0]),
-                                                Integer.valueOf(ipParts[1]));
+				@Override
+				public void run() {
+				    Socket s = null;
+				    try {
+					s = new Socket(InetAddress.getByName(
+						ipParts[0]),
+						Integer.valueOf(ipParts[1]));
 
-                                        s.setSoTimeout(getReadTimeout());
-                                        InputStream inStream =
-                                                s.getInputStream();
-                                        OutputStream outStream =
-                                                s.getOutputStream();
+					s.setSoTimeout(getReadTimeout());
+					InputStream inStream =
+						s.getInputStream();
+					OutputStream outStream =
+						s.getOutputStream();
 
-                                        PrintWriter outWriter =
-                                                new PrintWriter(outStream);
-                                        BufferedReader inReader =
-                                                new BufferedReader(
-                                                new InputStreamReader(
-                                                inStream));
-                                        ObjectOutputStream objectWriter =
-                                                new ObjectOutputStream(
-                                                outStream);
-                                        outWriter.println(READY_COMMAND);
-                                        outWriter.flush();
+					PrintWriter outWriter =
+						new PrintWriter(outStream);
+					BufferedReader inReader =
+						new BufferedReader(
+						new InputStreamReader(
+						inStream));
+					ObjectOutputStream objectWriter =
+						new ObjectOutputStream(
+						outStream);
+					outWriter.println(READY_COMMAND);
+					outWriter.flush();
 
-                                        String response = "";
-                                        try {
-                                            response = inReader.readLine();
-                                        } catch (SocketTimeoutException ex) {
-                                            log.warn("Socket Timeout " + "while reading, assume " + "connection dead.", ex);
-                                            s.close();
-                                            return;
-                                        }
-                                        if (response.equals(
-                                                MultiCastResourceBeacon.ACK_COMMAND)) {
-                                        } else {
-                                            log.warn("Invalid response \"" + response + "\"");
-                                            s.close();
-                                            return;
-                                        }
-                                        try {
-                                            objectWriter.writeObject(generateResourcePacket());
-                                        } catch (MultiCastResourceBuoyException ex) {
-                                            log.error(ex.getMessage(), ex);
-                                        }
-                                        objectWriter.flush();
-                                        if (response.equals(
-                                                MultiCastResourceBeacon.ACK_COMMAND)) {
-                                        } else {
-                                            log.warn("Invalid response \"" + response + "\"");
-                                            s.close();
-                                            return;
-                                        }
+					String response = "";
+					try {
+					    response = inReader.readLine();
+					} catch (SocketTimeoutException ex) {
+					    log.warn("Socket Timeout " + "while reading, assume " + "connection dead.", ex);
+					    s.close();
+					    return;
+					}
+					if (response.equals(
+						MultiCastResourceBeacon.ACK_COMMAND)) {
+					} else {
+					    log.warn("Invalid response \"" + response + "\"");
+					    s.close();
+					    return;
+					}
+					try {
+					    objectWriter.writeObject(generateResourcePacket());
+					} catch (MultiCastResourceBuoyException ex) {
+					    log.error(ex.getMessage(), ex);
+					}
+					objectWriter.flush();
+					if (response.equals(
+						MultiCastResourceBeacon.ACK_COMMAND)) {
+					} else {
+					    log.warn("Invalid response \"" + response + "\"");
+					    s.close();
+					    return;
+					}
 
-                                        outWriter.println(CLOSE_COMMAND);
-                                        outWriter.flush();
-                                        try {
-                                            response = inReader.readLine();
-                                        } catch (SocketTimeoutException ex) {
-                                            log.warn("Socket Timeout " + "while reading, assume " + "connection dead.", ex);
-                                            s.close();
-                                            return;
-                                        }
-                                        if (response.equals(
-                                                MultiCastResourceBeacon.ACK_COMMAND)) {
-                                            log.info("Closing Connection.");
-                                            s.close();
-                                        } else {
-                                            log.warn("Invalid response \"" + response + "\"");
-                                            s.close();
-                                            return;
-                                        }
-                                    } catch (UnknownHostException ex) {
-                                        log.error(ex.getMessage(), ex);
-                                        return;
-                                    } catch (IOException ex) {
-                                        log.error(ex.getMessage(), ex);
-                                        return;
-                                    }
-                                }
-                            }).start();
-                        } else {
-                            log.warn("Recieved invalid request: \"" + parts[0] + "\"");
-                        }
-                    } catch (SocketTimeoutException ex) {
-                        log.debug("SocketTimeoutReached... Restarting.");
-                        continue;
-                    } catch (IOException ex) {
-                        throw new MultiCastResourceBuoyException(
-                                "Error reading the datagram.", ex);
-                    }
-                    try {
-                        Thread.sleep(getThreadSleep());
-                    } catch (InterruptedException ex) {
-                        log.warn("Unexpected " + "thread death during sleep period.", ex);
-                    }
-                }
-                try {
-                    s.leaveGroup(group);
-                } catch (IOException ex) {
-                    throw new MultiCastResourceBuoyException(
-                            "IOException thrown when leaving group.",
-                            ex);
-                }
-                s.close();
-            } catch (MultiCastResourceBuoyException ex) {
-                log.error(ex.getMessage(), ex);
-                threadFailed = true;
-                thrownException = ex;
-            } finally {
-                running = false;
-            }
-        }
+					outWriter.println(CLOSE_COMMAND);
+					outWriter.flush();
+					try {
+					    response = inReader.readLine();
+					} catch (SocketTimeoutException ex) {
+					    log.warn("Socket Timeout " + "while reading, assume " + "connection dead.", ex);
+					    s.close();
+					    return;
+					}
+					if (response.equals(
+						MultiCastResourceBeacon.ACK_COMMAND)) {
+					    log.info("Closing Connection.");
+					    s.close();
+					} else {
+					    log.warn("Invalid response \"" + response + "\"");
+					    s.close();
+					    return;
+					}
+				    } catch (UnknownHostException ex) {
+					log.error(ex.getMessage(), ex);
+					return;
+				    } catch (IOException ex) {
+					log.error(ex.getMessage(), ex);
+					return;
+				    }
+				}
+			    }).start();
+			} else {
+			    log.warn("Recieved invalid request: \"" + parts[0] + "\"");
+			}
+		    } catch (SocketTimeoutException ex) {
+			log.debug("SocketTimeoutReached... Restarting.");
+			continue;
+		    } catch (IOException ex) {
+			throw new MultiCastResourceBuoyException(
+				"Error reading the datagram.", ex);
+		    }
+		    try {
+			Thread.sleep(getThreadSleep());
+		    } catch (InterruptedException ex) {
+			log.warn("Unexpected " + "thread death during sleep period.", ex);
+		    }
+		}
+		try {
+		    s.leaveGroup(group);
+		} catch (IOException ex) {
+		    throw new MultiCastResourceBuoyException(
+			    "IOException thrown when leaving group.",
+			    ex);
+		}
+		s.close();
+	    } catch (MultiCastResourceBuoyException ex) {
+		log.error(ex.getMessage(), ex);
+		threadFailed = true;
+		thrownException = ex;
+	    } finally {
+		running = false;
+	    }
+	}
 
-        /**
-         * Notifies the thread to stop listening at the next sleep interval.
-         */
-        public void notifyThreadStop() {
-            shouldBeRunning = false;
-        }
+	/**
+	 * Notifies the thread to stop listening at the next sleep interval.
+	 */
+	public void notifyThreadStop() {
+	    shouldBeRunning = false;
+	}
 
-        /**
-         *
-         * @return if the thread is currently running.
-         */
-        public boolean isThreadRunning() {
-            return running;
-        }
+	/**
+	 *
+	 * @return if the thread is currently running.
+	 */
+	public boolean isThreadRunning() {
+	    return running;
+	}
 
-        /**
-         * @return the threadFailed
-         */
-        public boolean isThreadFailed() {
-            return threadFailed;
-        }
+	/**
+	 * @return the threadFailed
+	 */
+	public boolean isThreadFailed() {
+	    return threadFailed;
+	}
 
-        /**
-         * @param threadFailed the threadFailed to set
-         */
-        public void setThreadFailed(boolean threadFailed) {
-            this.threadFailed = threadFailed;
-        }
+	/**
+	 * @param threadFailed the threadFailed to set
+	 */
+	public void setThreadFailed(boolean threadFailed) {
+	    this.threadFailed = threadFailed;
+	}
 
-        /**
-         * @return the thrownException
-         */
-        public MultiCastResourceBuoyException getThrownException() {
-            return thrownException;
-        }
+	/**
+	 * @return the thrownException
+	 */
+	public MultiCastResourceBuoyException getThrownException() {
+	    return thrownException;
+	}
     }
 
     private InetAddress guessHostAddress() throws MultiCastResourceBuoyException {
 
-        if (hostName != null) {
-            try {
-                return InetAddress.getByName(hostName);
-            } catch (UnknownHostException ex) {
-                throw new MultiCastResourceBuoyException(ex.getMessage(), ex);
-            }
-        } else {
-            if (s == null) {
-                throw new MultiCastResourceBuoyException("Multicast socket " +
-                        "not yet initialized, and hostname not set.");
-            }
-            InetAddress retVal = s.getInetAddress();
-            if (retVal != null) {
-                return s.getInetAddress();
-            } else {
-                log.warn("Failed to guess from the multicast socket... ");
-                log.warn("Attempting to guess from FIRST network card with IP");
-                log.warn("and the FIRST ip address assigned to the nic.");
-                InetAddress guess = null;
-                try {
-                    guess = NetUtilities.guessLocalInetAddress();
-                    
-                } catch (NetUtilitiesException ex) {
-                    throw new MultiCastResourceBuoyException(ex.getMessage(), ex);
-                }
-                if(guess==null){
-                    throw new MultiCastResourceBuoyException("Unable to " +
-                            "guess local address...");
-                }
-                return guess;
-            }
-        }
+	if (hostName != null) {
+	    try {
+		return InetAddress.getByName(hostName);
+	    } catch (UnknownHostException ex) {
+		throw new MultiCastResourceBuoyException(ex.getMessage(), ex);
+	    }
+	} else {
+	    if (s == null) {
+		throw new MultiCastResourceBuoyException("Multicast socket "
+			+ "not yet initialized, and hostname not set.");
+	    }
+	    InetAddress retVal = s.getInetAddress();
+	    if (retVal != null) {
+		return s.getInetAddress();
+	    } else {
+		log.warn("Failed to guess from the multicast socket... ");
+		log.warn("Attempting to guess from FIRST network card with IP");
+		log.warn("and the FIRST ip address assigned to the nic.");
+		InetAddress guess = null;
+		try {
+		    guess = NetUtilities.guessLocalInetAddress();
+
+		} catch (NetUtilitiesException ex) {
+		    throw new MultiCastResourceBuoyException(ex.getMessage(), ex);
+		}
+		if (guess == null) {
+		    throw new MultiCastResourceBuoyException("Unable to "
+			    + "guess local address...");
+		}
+		return guess;
+	    }
+	}
     }
 
     private ResourcePacket generateResourcePacket() throws MultiCastResourceBuoyException {
-        ResourcePacket retVal = new ResourcePacket();
-        retVal.setDefaultHostName(guessHostAddress().getHostAddress());
-        for (int i = 0; i < availableResources.size(); i++) {
-            Resource r = availableResources.get(i);
-            retVal.getResources().add(r);
-        }
-        return retVal;
+	ResourcePacket retVal = new ResourcePacket();
+	retVal.setDefaultHostName(guessHostAddress().getHostAddress());
+	for (int i = 0; i < availableResources.size(); i++) {
+	    Resource r = availableResources.get(i);
+	    retVal.getResources().add(r);
+	}
+	return retVal;
     }
 }
