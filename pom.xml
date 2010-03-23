@@ -8,59 +8,75 @@
     <name>jBeacon Master POM</name>
     <url>http://jbeacon.sourceforge.net/</url>
     <scm>
-	<connection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/trunk</connection>
-	<developerConnection>scm:svn:https://sworisbreathing:Pwn3dj00@jbeacon.svn.sourceforge.net/svnroot/jbeacon/trunk</developerConnection>
+        <connection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/trunk</connection>
+        <developerConnection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/trunk</developerConnection>
     </scm>
+    <distributionManagement>
+        <repository>
+            <id>jbeaconSsh</id>
+            <url>scp://shell.sf.net/home/groups/j/jb/jbeacon/htdocs/repo</url>
+        </repository>
+    </distributionManagement>
+
     <build>
-	<plugins>
-	    <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-compiler-plugin</artifactId>
-		<configuration>
-		    <source>1.6</source>
-		    <target>1.6</target>
-			<encoding>UTF-8</encoding>
-		</configuration>
-	    </plugin>
-		<plugin>
-			<artifactId>maven-release-plugin</artifactId>
-			<configuration>
-				<tagBase>https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/tags</tagBase>
-				<encoding>UTF-8</encoding>
-			</configuration>
-		</plugin>
-	</plugins>
+        <extensions>
+            <!-- Enabling the use of FTP -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>1.0-beta-6</version>
+            </extension>
+        </extensions>
+        
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <tagBase>https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/tags</tagBase>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
     <dependencyManagement>
-	<dependencies>
-	    <dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<version>4.6</version>
-		<scope>test</scope>
-	    </dependency>
-	    <dependency>
-		<groupId>commons-logging</groupId>
-		<artifactId>commons-logging</artifactId>
-		<version>1.1.1</version>
-		<scope>compile</scope>
-	    </dependency>
-	    <dependency>
-		<groupId>log4j</groupId>
-		<artifactId>log4j</artifactId>
-		<version>1.2.9</version>
-		<optional />
-	    </dependency>
-	    <dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring</artifactId>
-		<version>2.5.6.SEC01</version>
-	    </dependency>
-	</dependencies>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.6</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.1.1</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.9</version>
+                <optional />
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring</artifactId>
+                <version>2.5.6.SEC01</version>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
     <modules>
-	<module>jbeacon</module>
-	<module>demo</module>
+        <module>jbeacon</module>
+        <module>demo</module>
     </modules>
 </project>
 
