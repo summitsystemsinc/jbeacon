@@ -18,7 +18,7 @@ public final class MultiCastConstants {
     /**
      * Default thread wait
      */
-    public static final int DEFAULT_THREAD_WAIT = 250;
+    public static final int DEFAULT_THREAD_WAIT = 500;
 
     /**
      * Does nothing, disables external instantiation.
@@ -62,5 +62,5 @@ public final class MultiCastConstants {
     /**
      * Default listener port.
      */
-    public static final int DEFAULT_LISTENER_PORT = 8237;
+    public static final int DEFAULT_LISTENER_PORT = 37384;
 }

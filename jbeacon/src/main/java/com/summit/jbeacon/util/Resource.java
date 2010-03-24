@@ -18,6 +18,7 @@ import java.util.TreeMap;
  * @since 1.0
  */
 public class Resource implements Serializable {
+    private static final long serialVersionUID = 1;
 
     /**
      * Resource name, this really should be set.
@@ -25,6 +26,7 @@ public class Resource implements Serializable {
     private String resourceName;
 
     private String hostName = null;
+    private String ip = null;
 
     /**
      * Resource metadata. things like services and endpoints.
@@ -80,6 +82,20 @@ public class Resource implements Serializable {
      */
     public final void setHostName(final String hostName) {
         this.hostName = hostName;
+    }
+
+    /**
+     * @return the ip
+     */
+    public String getIp() {
+	return ip;
+    }
+
+    /**
+     * @param ip the ip to set
+     */
+    public void setIp(String ip) {
+	this.ip = ip;
     }
 
 }

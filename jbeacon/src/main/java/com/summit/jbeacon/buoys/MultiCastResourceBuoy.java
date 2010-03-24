@@ -99,6 +99,7 @@ public class MultiCastResourceBuoy {
      */
     private Integer readTimeout = MultiCastConstants.DEFAULT_READ_TIMEOUT;
     private String hostName = null;
+    private String ip = null;
 
     /**
      * Default constructor, gets the logger...
@@ -168,7 +169,7 @@ public class MultiCastResourceBuoy {
 	}
 	log.info("Hostname set to: " + hostName);
 	//log.info("Multicast Group: " + get)
-        beaconThread = new BeaconMultiCastReceiver();
+	beaconThread = new BeaconMultiCastReceiver();
 	new Thread(beaconThread).start();
 	//wait for thread to start running, or error out
 	while (!beaconThread.isThreadRunning()
@@ -267,6 +268,20 @@ public class MultiCastResourceBuoy {
     private MulticastSocket s = null;
 
     /**
+     * @return the ip
+     */
+    public String getIp() {
+	return ip;
+    }
+
+    /**
+     * @param ip the ip to set
+     */
+    public void setIp(String ip) {
+	this.ip = ip;
+    }
+
+    /**
      * This is the thread that will listen for the beacon request.
      */
     private class BeaconMultiCastReceiver implements Runnable {
@@ -334,7 +349,27 @@ public class MultiCastResourceBuoy {
 			//if we hear what we are listening for, do stuff
 			if (parts[0].equals(getListenString())) {
 			    final String[] ipParts = parts[1].split(":");
-			    log.info("Request to send information to: " + ipParts[0] + ":" + ipParts[1]);
+			    if (ipParts.length < 3) {
+				String msg = "Invalid message: " + message;
+				log.error(msg);
+				throw new MultiCastResourceBuoyException(msg);
+			    }
+			    log.info("Request to send information to: " + ipParts[0] + ":" + ipParts[1] + ":" + ipParts[2]);
+			    final String ip = ipParts[0];
+			    String hostname = ipParts[1];
+			    final int port;
+			    try {
+				port = Integer.valueOf(ipParts[2]);
+			    } catch (NumberFormatException ex) {
+				log.error("Invalid message: " + message);
+				throw new MultiCastResourceBuoyException(ex.getMessage(), ex);
+			    }
+			    if (ip.equals("") && hostname.equals("")) {
+				String msg = "Invalid message, hostname and ip cannot be empty.";
+				log.error(msg);
+				throw new MultiCastResourceBuoyException(msg);
+			    }
+
 			    //Small inline thread for communication...
 			    //This is not really testable...
 			    //TODO refactor this to make testable.
@@ -346,10 +381,16 @@ public class MultiCastResourceBuoy {
 				public void run() {
 				    Socket s = null;
 				    try {
-					s = new Socket(InetAddress.getByName(
-						ipParts[0]),
-						Integer.valueOf(ipParts[1]));
-
+					if (ip.equals("")) {
+					    log.warn("IP not set, using hostname...");
+					    s = new Socket(InetAddress.getByName(
+						    hostName),
+						    port);
+					} else {
+					    s = new Socket(InetAddress.getByName(
+						    ip),
+						    port);
+					}
 					s.setSoTimeout(getReadTimeout());
 					InputStream inStream =
 						s.getInputStream();
@@ -425,14 +466,18 @@ public class MultiCastResourceBuoy {
 				}
 			    }).start();
 			} else {
-			    log.warn("Recieved invalid request: \"" + parts[0] + "\"");
+			    String errorMessage = "Recieved invalid request: \"" + parts[0] + "\"";
+			    log.warn(errorMessage);
+			    throw new MultiCastResourceBuoyException(errorMessage);
 			}
 		    } catch (SocketTimeoutException ex) {
 			log.debug("SocketTimeoutReached... Restarting.");
 			continue;
 		    } catch (IOException ex) {
-			throw new MultiCastResourceBuoyException(
-				"Error reading the datagram.", ex);
+			log.debug(ex.getMessage(), ex);
+		    } catch (MultiCastResourceBuoyException ex) {
+			log.error(ex.getMessage(), ex);
+			continue;
 		    }
 		    try {
 			Thread.sleep(getThreadSleep());
@@ -528,11 +573,14 @@ public class MultiCastResourceBuoy {
 		return guess;
 	    }
 	}
+
     }
 
     private ResourcePacket generateResourcePacket() throws MultiCastResourceBuoyException {
 	ResourcePacket retVal = new ResourcePacket();
-	retVal.setDefaultHostName(guessHostAddress().getHostAddress());
+	InetAddress guessedAddress = guessHostAddress();
+	retVal.setDefaultHostName(guessedAddress.getHostName());
+	retVal.setDefaultIp(guessedAddress.getHostAddress());
 	for (int i = 0; i < availableResources.size(); i++) {
 	    Resource r = availableResources.get(i);
 	    retVal.getResources().add(r);

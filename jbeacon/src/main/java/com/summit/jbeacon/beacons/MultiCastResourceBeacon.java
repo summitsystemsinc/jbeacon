@@ -79,6 +79,7 @@ public class MultiCastResourceBeacon {
      */
     private MultiCastResourceListener listenerThread = null;
     private String hostName = null;
+    private String ip = null;
 
     /**
      * refresh the resources that are available.
@@ -107,7 +108,7 @@ public class MultiCastResourceBeacon {
 		    "Error creating multicast socket...", ex);
 	}
 
-	String broadcastMessage = getBroadcastText() + " : " + this.hostName + ":" + listeningSocket.getLocalPort();
+	String broadcastMessage = getBroadcastText() + " : " + getIp() + ":" + getHostName() + ":" + listeningSocket.getLocalPort();
 	byte[] buf = broadcastMessage.getBytes();
 	DatagramPacket pack = null;
 	try {
@@ -129,17 +130,18 @@ public class MultiCastResourceBeacon {
     }
 
     public void startListening() throws MultiCastResourceBeaconException {
-	if (hostName == null) {
-	    try {
-		hostName = InetAddress.getLocalHost().getHostName();
-	    } catch (UnknownHostException ex) {
-		throw new MultiCastResourceBeaconException("Host name not" + " configured, and unable to determine; aborting.");
-	    }
-	}
 	try {
+	    if (hostName == null) {
+		hostName = InetAddress.getLocalHost().getHostName();
+	    }
 	    listeningSocket = new ServerSocket(getListenPort(),
-		    0,
-		    InetAddress.getByName(hostName));
+		    0,InetAddress.getLocalHost());
+
+	    if (ip == null) {
+		ip = listeningSocket.getInetAddress().getHostAddress();
+	    }
+
+
 	    listenerThread = new MultiCastResourceListener(listeningSocket);
 	    new Thread(listenerThread).start();
 	} catch (IOException ex) {
@@ -239,6 +241,9 @@ public class MultiCastResourceBeacon {
      * @return the hostName
      */
     public String getHostName() {
+	if (hostName == null) {
+	    return "";
+	}
 	return hostName;
     }
 
@@ -261,6 +266,23 @@ public class MultiCastResourceBeacon {
      */
     public void setAvailableResources(Set<ResourcePacket> availableResources) {
 	this.availableResources = availableResources;
+    }
+
+    /**
+     * @return the ip
+     */
+    public String getIp() {
+	if (ip == null) {
+	    return "";
+	}
+	return ip;
+    }
+
+    /**
+     * @param ip the ip to set
+     */
+    public void setIp(String ip) {
+	this.ip = ip;
     }
 
     private class MultiCastResourceListener implements Runnable {
