@@ -328,7 +328,7 @@ public class MultiCastResourceBuoy {
 			    "IOException thrown when joining group.",
 			    ex);
 		}
-		byte[] buffer = new byte[getDataGramSize()];
+		
 		try {
 		    s.setSoTimeout(getReadTimeout());
 		} catch (SocketException ex) {
@@ -337,6 +337,7 @@ public class MultiCastResourceBuoy {
 		}
 		running = true;
 		while (shouldBeRunning) {
+		    byte[] buffer = new byte[getDataGramSize()];
 		    DatagramPacket pack =
 			    new DatagramPacket(buffer, buffer.length);
 		    try {
