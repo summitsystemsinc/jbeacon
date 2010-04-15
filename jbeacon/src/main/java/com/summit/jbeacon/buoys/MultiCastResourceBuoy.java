@@ -9,8 +9,6 @@ import com.summit.jbeacon.util.NetUtilitiesException;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.summit.jbeacon.util.MultiCastConstants;
@@ -24,16 +22,11 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -388,9 +381,14 @@ public class MultiCastResourceBuoy {
 						    hostName),
 						    port);
 					} else {
+                                            try{
 					    s = new Socket(InetAddress.getByName(
 						    ip),
 						    port);
+                                            }catch(IOException ex){
+                                                log.error("Error connectiong to: " + ip, ex);
+                                                return;
+                                            }
 					}
 					s.setSoTimeout(getReadTimeout());
 					InputStream inStream =
@@ -461,6 +459,7 @@ public class MultiCastResourceBuoy {
 					log.error(ex.getMessage(), ex);
 					return;
 				    } catch (IOException ex) {
+
 					log.error(ex.getMessage(), ex);
 					return;
 				    }
