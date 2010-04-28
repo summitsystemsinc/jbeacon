@@ -78,6 +78,9 @@
         <module>jbeacon</module>
         <module>demo</module>
     </modules>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 </project>
 
 
