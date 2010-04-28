@@ -375,24 +375,24 @@ public class MultiCastResourceBuoy {
 
 								@Override
 								public void run() {
-									Socket s = null;
+									Socket connection = null;
 									try {
 										if (ip.equals("")) {
 											log.warn("IP not set, using hostname...");
-											s = new Socket(InetAddress.getByName(
+											connection = new Socket(InetAddress.getByName(
 													hostName),
 													port);
 										} else {
 											try {
-												s = new Socket(InetAddress.getByName(ip), port);
+												connection = new Socket(InetAddress.getByName(ip), port);
 											} catch (IOException ex) {
 												log.error("Error connectiong to: " + ip, ex);
 												return;
 											}
 										}
-										s.setSoTimeout(getReadTimeout());
-										final InputStream inStream = s.getInputStream();
-										final OutputStream outStream = s.getOutputStream();
+										connection.setSoTimeout(getReadTimeout());
+										final InputStream inStream = connection.getInputStream();
+										final OutputStream outStream = connection.getOutputStream();
 
 										final PrintWriter outWriter = new PrintWriter(outStream);
 										final BufferedReader inReader = new BufferedReader(new InputStreamReader(inStream));
@@ -413,18 +413,18 @@ public class MultiCastResourceBuoy {
 											if (log.isWarnEnabled()) {
 												log.warn("Too many failed reads.  Assuming the connection was lost.", ex);
 											}
-											s.close();
+											connection.close();
 											return;
 										}
 										if (response.equals(
 												MultiCastResourceBeacon.ACK_COMMAND)) {
 										} else {
 											log.warn("Invalid response \"" + response + "\"");
-											s.close();
+											connection.close();
 											return;
 										}
 										try {
-											objectWriter.writeObject(generateResourcePacket());
+											objectWriter.writeObject(generateResourcePacket(connection));
 										} catch (MultiCastResourceBuoyException ex) {
 											log.error(ex.getMessage(), ex);
 										}
@@ -441,14 +441,14 @@ public class MultiCastResourceBuoy {
 											if (log.isWarnEnabled()) {
 												log.warn("Too many failed reads.  Assuming the connection was lost.", ex);
 											}
-											s.close();
+											connection.close();
 											return;
 										}
 										if (response.equals(
 												MultiCastResourceBeacon.ACK_COMMAND)) {
 										} else {
 											log.warn("Invalid response \"" + response + "\"");
-											s.close();
+											connection.close();
 											return;
 										}
 
@@ -466,16 +466,16 @@ public class MultiCastResourceBuoy {
 											if (log.isWarnEnabled()) {
 												log.warn("Too many failed reads.  Assuming the connection was lost.", ex);
 											}
-											s.close();
+											connection.close();
 											return;
 										}
 										if (response.equals(
 												MultiCastResourceBeacon.ACK_COMMAND)) {
 											log.info("Closing Connection.");
-											s.close();
+											connection.close();
 										} else {
 											log.warn("Invalid response \"" + response + "\"");
-											s.close();
+											connection.close();
 											return;
 										}
 									} catch (UnknownHostException ex) {
@@ -562,46 +562,13 @@ public class MultiCastResourceBuoy {
 		}
 	}
 
-	private InetAddress guessHostAddress() throws MultiCastResourceBuoyException {
-
-		if (hostName != null) {
-			try {
-				return InetAddress.getByName(hostName);
-			} catch (UnknownHostException ex) {
-				throw new MultiCastResourceBuoyException(ex.getMessage(), ex);
-			}
-		} else {
-			if (s == null) {
-				throw new MultiCastResourceBuoyException("Multicast socket "
-						+ "not yet initialized, and hostname not set.");
-			}
-			InetAddress retVal = s.getInetAddress();
-			if (retVal != null) {
-				return s.getInetAddress();
-			} else {
-				log.warn("Failed to guess from the multicast socket... ");
-				log.warn("Attempting to guess from FIRST network card with IP");
-				log.warn("and the FIRST ip address assigned to the nic.");
-				InetAddress guess = null;
-				try {
-					guess = NetUtilities.guessLocalInetAddress();
-
-				} catch (NetUtilitiesException ex) {
-					throw new MultiCastResourceBuoyException(ex.getMessage(), ex);
-				}
-				if (guess == null) {
-					throw new MultiCastResourceBuoyException("Unable to "
-							+ "guess local address...");
-				}
-				return guess;
-			}
-		}
-
+	private InetAddress guessHostAddress(final Socket socket) throws MultiCastResourceBuoyException {
+		return socket.getLocalAddress();
 	}
 
-	private ResourcePacket generateResourcePacket() throws MultiCastResourceBuoyException {
+	private ResourcePacket generateResourcePacket(final Socket socket) throws MultiCastResourceBuoyException {
 		ResourcePacket retVal = new ResourcePacket();
-		InetAddress guessedAddress = guessHostAddress();
+		InetAddress guessedAddress = guessHostAddress(socket);
 		retVal.setDefaultHostName(guessedAddress.getHostName());
 		retVal.setDefaultIp(guessedAddress.getHostAddress());
 		for (int i = 0; i < availableResources.size(); i++) {
