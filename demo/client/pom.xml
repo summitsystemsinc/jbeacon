@@ -4,7 +4,7 @@
   <parent>
     <artifactId>demo</artifactId>
     <groupId>com.summit.jbeacon</groupId>
-    <version>0.2.2-SNAPSHOT</version>
+    <version>0.2.2</version>
   </parent>
   <groupId>com.summit.jbeacon.demo</groupId>
   <artifactId>client</artifactId>

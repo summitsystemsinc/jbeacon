@@ -3,12 +3,12 @@
     <groupId>com.summit</groupId>
     <artifactId>jbeacon</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.2-SNAPSHOT</version>
+    <version>0.2.2</version>
     <name>jBeacon Master POM</name>
     <url>http://jbeacon.sourceforge.net/</url>
     <scm>
-        <connection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/trunk</connection>
-        <developerConnection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/trunk</developerConnection>
+        <connection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/tags/jbeacon-0.2.2</connection>
+        <developerConnection>scm:svn:https://jbeacon.svn.sourceforge.net/svnroot/jbeacon/tags/jbeacon-0.2.2</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
