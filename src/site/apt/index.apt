@@ -1,0 +1,15 @@
+                              --------------------
+				    jBeacon
+                               --------------------
+                   Justin Smith (justin.smith@summitsystemsinc.com)
+                    Steven Swor (steven.swor@summitsystemsinc.com)
+                               --------------------
+                                  August 6, 2009
+                               --------------------
+
+%{toc}
+
+    jBeacon is a software library used for locating software assets on a network.
+jBeacon uses JAVA's implementation of the multicast layer, as a beacon/bouy to
+discover other elements in your program.  jBeacon can be easily
+wired with a Spring bean context, or configured in your source code.

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : site.xml
+    Created on : July 22, 2009, 1:56 PM
+    Author     : justin
+    Description:
+        Purpose of the document follows.
+-->
+<project  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns:ns1='http://maven.apache.org/DECORATION/1.0.0'
+   xsi:schemaLocation='http://maven.apache.org/DECORATION/1.0.0 
+   http://maven.apache.org/xsd/decoration-1.0.0.xsd'
+   >
+   <publishDate position="right"/>
+   <body>
+       <menu name="Overview">
+	   <item name="Overview" href="./index.html"/>
+	   <item name="Using Maven" href="./maven.html"/>
+	   <item name="Usage" href="./usage.html"/>
+       </menu>
+       <menu ref="modules" inherit="bottom"/>
+       <menu ref="reports" />
+   </body>
+</project>
