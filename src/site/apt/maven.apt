@@ -1,0 +1,48 @@
+				--------------------
+				    jBeacon
+                               --------------------
+                   Justin Smith (justin.smith@summitsystemsinc.com)
+                    Steven Swor (steven.swor@summitsystemsinc.com)
+                               --------------------
+                                  August 6, 2009
+                               --------------------
+
+Using jBeacon with Maven
+
+    A maven2 repository has been set up for jBeacon.  Just add the repository
+    to your settings.xml or pom.xml file.
+
+    <<settings.xml>>
+
++-----------------------------------+
+<repositories>
+   ...
+        <repository>
+          <id>jbeacon</id>
+          <name>jBeacon Repository</name>
+          <url>http://jbeacon.sourceforge.net/repo/</url>
+        </repository>
+   ...
+</repositories>
++-----------------------------------+
+
+    <<pom.xml>>
+
++------------------------------------+
+<repositories>
+    ...
+        <repository>
+            <id>jBeacon-releases</id>
+            <name>jBeacon Releases</name>
+            <releases />
+            <url>http://jbeacon.sourceforge.net/repo/</url>
+        </repository>
+        <repository>
+            <id>jBeacon-snapshots</id>
+            <name>jBeacon Snapshots</name>
+            <snapshots />
+            <url>http://jbeacon.sourceforge.net/repo/</url>
+        </repository>
+    ...
+</repositories>
++------------------------------------+

@@ -1,0 +1,16 @@
+                              --------------------
+				    jBeacon
+                               --------------------
+                   Justin Smith (justin.smith@summitsystemsinc.com)
+                    Steven Swor (steven.swor@summitsystemsinc.com)
+                               --------------------
+                                  August 6, 2009
+                               --------------------
+
+Usage
+
+    Currently, the usage documentation needs to be developed.  This stinks, however,
+a full demo is implemented, with Spring, in the source code.  You just need to check out
+the source code from sourceforge.  Instructions for that can be found {{{./source-repository.html}here}}.
+
+    You will need maven2 to build the source tree as-is.
