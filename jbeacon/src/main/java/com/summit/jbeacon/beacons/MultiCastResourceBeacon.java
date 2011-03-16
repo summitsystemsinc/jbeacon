@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -116,6 +117,7 @@ public class MultiCastResourceBeacon {
 		MulticastSocket s = null;
 		try {
 			s = new MulticastSocket();
+                        s.setReuseAddress(true);
 		} catch (IOException ex) {
 			throw new MultiCastResourceBeaconException(
 					"Error creating multicast socket...", ex);
@@ -147,8 +149,9 @@ public class MultiCastResourceBeacon {
 			if (hostName == null) {
 				hostName = InetAddress.getLocalHost().getHostName();
 			}
-			listeningSocket = new ServerSocket(getListenPort(),
-					0, InetAddress.getLocalHost());
+                        listeningSocket = new ServerSocket();
+                        listeningSocket.setReuseAddress(true);
+                        listeningSocket.bind(new InetSocketAddress(InetAddress.getLocalHost(), getListenPort()), 0);
 
 			if (ip == null) {
 				ip = listeningSocket.getInetAddress().getHostAddress();
